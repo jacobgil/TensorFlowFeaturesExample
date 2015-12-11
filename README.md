@@ -1,3 +1,6 @@
+# TensorFlowFeaturesExample
+An example for extracting features from a tensor flow model for transfer learning.
+Classifies between two image categories, using a tensorflow graph model.
 
 Dependancies
 ------------
