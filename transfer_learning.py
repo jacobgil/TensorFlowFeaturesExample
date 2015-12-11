@@ -13,6 +13,7 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('first_class', '', """Absolute path to the first category images locations""")
 tf.app.flags.DEFINE_string('second_class', '', """Absolute path to the second category images locations""")
 tf.app.flags.DEFINE_string('graph_file', '', """Absolute path the graph degenition protobuf file""")
+tf.app.flags.DEFINE_string('layer_name', 'pool_3:0', """Name of the layer to extract features from""")
 
 def create_graph(graph_file):
   # Creates graph from saved graph_def.pb.
@@ -41,10 +42,10 @@ def shuffle_data(features, labels):
 
   return new_features, new_labels
 
-def get_jpeg_dataset(A_DIR, B_DIR, tensor_name = "pool_3:0"):
+def get_jpeg_dataset(A_DIR, B_DIR, tensor_name):
   CLASS_A_FEATURES = [extract_features(f, tensor_name) 
                       for f in glob.glob(A_DIR + "/*.jpg")]
-  CLASS_A_FEATURES = [extract_features(f, tensor_name)
+  CLASS_B_FEATURES = [extract_features(f, tensor_name)
                       for f in glob.glob(B_DIR + "/*.jpg")]
 
   features = CLASS_A_FEATURES + CLASS_B_FEATURES
@@ -55,7 +56,7 @@ def get_jpeg_dataset(A_DIR, B_DIR, tensor_name = "pool_3:0"):
 def main(_):
   create_graph(FLAGS.graph_file)
   
-  x, y = get_jpeg_dataset(FLAGS.first_class, FLAGS.second_class)
+  x, y = get_jpeg_dataset(FLAGS.first_class, FLAGS.second_class, FLAGS.layer_name)
   TRAINING_PORTION = 0.4
   l = int(len(y) * TRAINING_PORTION)
 
